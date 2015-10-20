@@ -1,4 +1,5 @@
 recursive-include nleq2 *.pyf
+recursive-exclude nleq2 *.f
 include AUTHORS
 include CHANGES.rst
 include LICENSE

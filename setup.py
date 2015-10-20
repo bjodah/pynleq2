@@ -22,7 +22,7 @@ In order to indicate that you have read and accepted their license
 you need to either:
 
 - set the environment variable PYNLEQ2_NLEQ2_ROOT_URL to
-  point to a repository which containing the source code of NLEQ2. e.g.
+  point to a repository containing the source code of NLEQ2. e.g.
      $ export PYNLEQ2_NLEQ2_ROOT_URL=http://www.univeristy.edu/mirror/nleq2/
 
 - Alternatively, extract the sources into the nleq2/ sub-directory manually.

@@ -2,14 +2,14 @@
 pynleq2
 =======
 
-.. image:: http://hera.physchem.kth.se:8080/github.com/bjodah/pycvodes/status.svg?branch=master
-   :target: http://hera.physchem.kth.se:8080/github.com/bjodah/pycvodes
+.. image:: http://hera.physchem.kth.se:8080/github.com/bjodah/pynleq2/status.svg?branch=master
+   :target: http://hera.physchem.kth.se:8080/github.com/bjodah/pynleq2
    :alt: Build status
-.. image:: https://img.shields.io/pypi/v/pycvodes.svg
-   :target: https://pypi.python.org/pypi/pycvodes
+.. image:: https://img.shields.io/pypi/v/pynleq2.svg
+   :target: https://pypi.python.org/pypi/pynleq2
    :alt: PyPI version
-.. image:: https://img.shields.io/pypi/l/pycvodes.svg
-   :target: https://github.com/bjodah/pycvodes/blob/master/LICENSE
+.. image:: https://img.shields.io/pypi/l/pynleq2.svg
+   :target: https://github.com/bjodah/pynleq2/blob/master/LICENSE
    :alt: License
 
 `pynleq2 <https://github.com/bjodah/pynleq2>`_ provides a
