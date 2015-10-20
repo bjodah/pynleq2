@@ -1,0 +1,29 @@
+package:
+    name: pynleq2
+    version: 0.0.1.git
+
+source:
+    path: ../
+
+build:
+    number: 0
+
+requirements:
+    build:
+        - python
+        - numpy
+    run:
+        - python
+        - numpy
+
+test:
+    imports:
+        - pynleq2
+    requires:
+        - python
+        - pytest
+        - numpy
+
+about:
+    home: https://github.com/bjodah/pynleq2
+    license: BSD
