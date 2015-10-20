@@ -65,7 +65,10 @@ if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
         return md
 
     def download(url, outpath):
-        from urllib2 import urlopen
+        try:
+            from urllib2 import urlopen
+        except ImportError:
+            from urllib.request import urlopen
         f = urlopen(url)
         with open(outpath, "wb") as fh:
             fh.write(f.read())
