@@ -11,6 +11,10 @@ pynleq2
 .. image:: https://img.shields.io/pypi/l/pynleq2.svg
    :target: https://github.com/bjodah/pynleq2/blob/master/LICENSE
    :alt: License
+.. image:: http://hera.physchem.kth.se/~pynleq2/master/htmlcov/coverage.svg
+   :target: http://hera.physchem.kth.se/~pynleq2/master/htmlcov
+   :alt: coverage
+
 
 `pynleq2 <https://github.com/bjodah/pynleq2>`_ provides a
 `Python <http://www.python.org>`_ binding to the
