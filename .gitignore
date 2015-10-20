@@ -1,0 +1,7 @@
+**.pyc
+**__pycache__
+build/
+**.so
+.cache/
+nleq2/nleq2module.c
+nleq2/*.f
