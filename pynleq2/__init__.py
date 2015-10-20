@@ -4,6 +4,7 @@ from __future__ import (absolute_import, division, print_function)
 import numpy as np
 from .nleq2 import nleq2
 
+
 def solve(func, jacfunc, guess, maxiter=100):
     """
     Solves a system of nonlinear equations using the NLEQ2 Fortran code
@@ -15,14 +16,15 @@ def solve(func, jacfunc, guess, maxiter=100):
     jacfunc: callback
         signature
     """
+
     guess = np.asarray(guess, dtype=np.float64)
     x0 = guess.copy()
     s_scale = guess.copy()
 
     N = len(x0)
-    iwk = np.zeros((N+52),'i')
+    iwk = np.zeros((N+52), 'i')
     rwk_len = N*(N + max(N, 10) + 15) + 61
-    rwk = np.zeros(rwk_len,'d')
+    rwk = np.zeros(rwk_len, 'd')
     iopt = np.zeros(50, 'i')
 
     rtol = np.finfo(np.float64).eps*10*N

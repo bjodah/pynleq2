@@ -34,12 +34,10 @@ PySCeS project (http://pysces.sourceforge.net/), see also LICENSE_pysces.txt
 This has been tested vid NLEQ2 v 2.3.0.2
 """
 
-import os, re
-try:
-    from numpy.distutils.core import setup, Extension
-except Exception, ex:
-    print "NumPy is required"
-    os.sys.exit(os.EX_OK+1)
+import os
+import shutil
+import sys
+from numpy.distutils.core import setup, Extension
 
 pkg_name = 'pynleq2'
 
@@ -47,7 +45,7 @@ ext_modules = []
 if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
         '--help-commands', 'egg_info', 'clean', '--version'):
     # nleq2 version: 2.3.0.2
-    md5output = """
+    md5output = """\
     28ed88f1ae7bab8dc850348b5e734881  linalg_nleq2.f
     73401c84c8e0d434fffa6f303ba813e0  nleq2.f
     77189300200be5748152fa28dc236963  wnorm.f
@@ -55,8 +53,8 @@ if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
     e2ac1a20fc6294cb3e0d7f65bbac53e6  zibmon.f
     6520c958f2bd339b435a68541d5b910b  zibsec.f
     """
-    md5sums, sources = zip(*map(str.split, md5output[1:-1].split('\n')))
-
+    from textwrap import dedent
+    md5sums, sources = zip(*map(str.split, dedent(md5output)[:-1].split('\n')))
 
     def md5_of_file(path, nblocks=128):
         from hashlib import md5
@@ -68,16 +66,10 @@ if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
 
     def download(url, outpath):
         from urllib2 import urlopen
-        try:
-            f = urlopen(url)
-            print("downloading " + url)
-            with open(outpath, "wb") as fh:
-                fh.write(f.read())
-        except HTTPError, e:
-            print("HTTP Error:", e.code, url)
-        except URLError, e:
-            print("URL Error:", e.reason, url)
-
+        f = urlopen(url)
+        print("downloading " + url)
+        with open(outpath, "wb") as fh:
+            fh.write(f.read())
 
     for src, md5sum in zip(sources, md5sums):
         srcpath = os.path.join('nleq2', src)
@@ -86,7 +78,7 @@ if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
             if NLEQ2_URL:
                 download(NLEQ2_URL+src, srcpath)
             else:
-                fmtstr = "Could not find: %s (and $PYNLEQ2_NLEQ2_ROOT_URL not set)"
+                fmtstr = "Could not find: %s ($PYNLEQ2_NLEQ2_ROOT_URL not set)"
                 raise ValueError(fmtstr % src)
         if md5_of_file(srcpath).hexdigest() != md5sum:
             raise ValueError("Mismatching MD5 sum for %s" % srcpath)
@@ -140,7 +132,7 @@ setup_kwargs = dict(
     author_email='bjodah@DELETEMEgmail.com',
     url='https://github.com/bjodah/' + pkg_name,
     license='BSD',
-    requires = ['numpy'],
+    requires=['numpy'],
     packages=[pkg_name] + tests,
     ext_modules=ext_modules,
 )

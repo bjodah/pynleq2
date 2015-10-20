@@ -49,6 +49,7 @@ Example reformulated from `SciPy documentation <docs.scipy.org/doc/scipy/referen
 
 .. code:: python
 
+   >>> from pynleq2 import solve
    >>> def f(x, i):
    ...     return [x[0] + (x[0] - x[1])**3/2 - 1,
    ...             (x[1] - x[0])**3/2 + x[1]], i
@@ -66,7 +67,7 @@ Example reformulated from `SciPy documentation <docs.scipy.org/doc/scipy/referen
    ...
    >>> x, ierr = solve(f, j, [0, 1])
    >>> x
-   [ 0.8411639  0.1588361]
+   array([ 0.8411639,  0.1588361])
 
 
 License
