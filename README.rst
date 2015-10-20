@@ -20,7 +20,7 @@ pynleq2
 `Python <http://www.python.org>`_ binding to the
 `NLEQ2 <http://elib.zib.de/pub/elib/codelib/en/nonlin.html>`_
 algorithm from `CodeLib <http://elib.zib.de/pub/elib/codelib/en/>`_ distributed
-by `Zuse Institute Berlin (ZIP) <http://www.zib.de/>`_.
+by `Zuse Institute Berlin (ZIB) <http://www.zib.de/>`_.
 Note that this package does not contain the source code of NLEQ2 which has its
 `own license <http://elib.zib.de/pub/elib/codelib/en/Lizenz.html>`_ (as of 2015-10-20 
 it may be used for free for academic use, but not for commerical use).
