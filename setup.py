@@ -115,8 +115,10 @@ classifiers = [
     'License :: OSI Approved :: BSD License',
     'Operating System :: OS Independent',
     'Programming Language :: Fortran',
-    'Programming Language :: Python'
-],
+    'Programming Language :: Python',
+    'Topic :: Scientific/Engineering',
+    'Topic :: Scientific/Engineering :: Mathematics',
+]
 
 tests = [
     'pynleq2.tests',
