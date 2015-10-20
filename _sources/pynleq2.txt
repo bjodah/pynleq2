@@ -1,0 +1,17 @@
+pynleq2 package
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pynleq2.tests
+
+Module contents
+---------------
+
+.. automodule:: pynleq2
+    :members:
+    :undoc-members:
+    :show-inheritance:

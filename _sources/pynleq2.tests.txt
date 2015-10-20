@@ -1,0 +1,22 @@
+pynleq2.tests package
+=====================
+
+Submodules
+----------
+
+pynleq2.tests.test_solve module
+-------------------------------
+
+.. automodule:: pynleq2.tests.test_solve
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: pynleq2.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
