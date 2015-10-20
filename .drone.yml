@@ -1,0 +1,16 @@
+image: bjodah/dockerfile-bjodah-scicomp:14.04b
+git:
+    path: github.com/bjodah/pynleq2
+env:
+  - MY_SERVER=pynleq2@hera.physchem.kth.se
+script:
+  - if [[ "$DRONE_BRANCH" =~ ^v[0-9]+.[0-9]?* ]]; then export PYNLEQ2_RELEASE_VERSION=$DRONE_BRANCH; echo ${PYNLEQ2_RELEASE_VERSION} | tail -c +2 > __conda_version__.txt; fi
+  - ./scripts/run_tests.sh --cov pynleq2 --cov-report html
+  - python2 setup.py sdist
+  - ./scripts/generate_docs.sh
+  - ./scripts/coverage_badge.py htmlcov/ htmlcov/coverage.svg
+  - ssh "${MY_SERVER}" "mkdir -p ~/public_html/$DRONE_BRANCH" && scp -r doc/ dist/* htmlcov/ ${MY_SERVER}:~/public_html/$DRONE_BRANCH
+  - touch doc/_build/html/.nojekyll
+  - git config --global user.name "drone"
+  - git config --global user.email ${MY_SERVER}
+  - if [[ "$DRONE_BRANCH" == "master" ]]; then ./scripts/github_upload.sh doc/_build/html bjodah pynleq2 gh-pages; fi

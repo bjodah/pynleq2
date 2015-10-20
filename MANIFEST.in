@@ -1,0 +1,6 @@
+recursive-include nleq2 *.pyf
+include AUTHORS
+include CHANGES.rst
+include LICENSE
+include README.rst
+include requirements.txt

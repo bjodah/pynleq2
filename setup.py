@@ -30,6 +30,8 @@ you need to either:
 
 The python interface (nleq2/nleq2.pyf) has been taken from the BSD licensed
 PySCeS project (http://pysces.sourceforge.net/), see also LICENSE_pysces.txt
+
+This has been tested vid NLEQ2 v 2.3.0.2
 """
 
 import os, re
@@ -39,72 +41,120 @@ except Exception, ex:
     print "NumPy is required"
     os.sys.exit(os.EX_OK+1)
 
-__version__ = '0.0.1.git'
+pkg_name = 'pynleq2'
 
-sources = 'nleq2.pyf nleq2.f linalg_nleq2.f zibmon.f zibsec.f zibconst.f wnorm.f'.split()
+ext_modules = []
+if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
+        '--help-commands', 'egg_info', 'clean', '--version'):
+    # nleq2 version: 2.3.0.2
+    md5output = """
+    28ed88f1ae7bab8dc850348b5e734881  linalg_nleq2.f
+    73401c84c8e0d434fffa6f303ba813e0  nleq2.f
+    77189300200be5748152fa28dc236963  wnorm.f
+    5d912441fb6f55d10c8b98bbb9168195  zibconst.f
+    e2ac1a20fc6294cb3e0d7f65bbac53e6  zibmon.f
+    6520c958f2bd339b435a68541d5b910b  zibsec.f
+    """
+    md5sums, sources = zip(*map(str.split, md5output[1:-1].split('\n')))
 
-# nleq2 version: 2.3.0.2
-md5output = """
-28ed88f1ae7bab8dc850348b5e734881  linalg_nleq2.f
-73401c84c8e0d434fffa6f303ba813e0  nleq2.f
-77189300200be5748152fa28dc236963  wnorm.f
-5d912441fb6f55d10c8b98bbb9168195  zibconst.f
-e2ac1a20fc6294cb3e0d7f65bbac53e6  zibmon.f
-6520c958f2bd339b435a68541d5b910b  zibsec.f
-"""
-md5sums, sources = zip(*map(str.split, md5output[1:-1].split('\n')))
+
+    def md5_of_file(path, nblocks=128):
+        from hashlib import md5
+        md = md5()
+        with open(path, 'rb') as f:
+            for chunk in iter(lambda: f.read(nblocks*md.block_size), b''):
+                md.update(chunk)
+        return md
+
+    def download(url, outpath):
+        from urllib2 import urlopen
+        try:
+            f = urlopen(url)
+            print("downloading " + url)
+            with open(outpath, "wb") as fh:
+                fh.write(f.read())
+        except HTTPError, e:
+            print("HTTP Error:", e.code, url)
+        except URLError, e:
+            print("URL Error:", e.reason, url)
 
 
-def md5_of_file(path, nblocks=128):
-    from hashlib import md5
-    md = md5()
-    with open(path, 'rb') as f:
-        for chunk in iter(lambda: f.read(nblocks*md.block_size), b''):
-            md.update(chunk)
-    return md
+    for src, md5sum in zip(sources, md5sums):
+        srcpath = os.path.join('nleq2', src)
+        if not os.path.exists(srcpath):
+            NLEQ2_URL = os.environ.get('PYNLEQ2_NLEQ2_ROOT_URL', None)
+            if NLEQ2_URL:
+                download(NLEQ2_URL+src, srcpath)
+            else:
+                fmtstr = "Could not find: %s (and $PYNLEQ2_NLEQ2_ROOT_URL not set)"
+                raise ValueError(fmtstr % src)
+        if md5_of_file(srcpath).hexdigest() != md5sum:
+            raise ValueError("Mismatching MD5 sum for %s" % srcpath)
 
-def download(url, outpath):
-    from urllib2 import urlopen
+    ext_modules = [
+        Extension('pynleq2.nleq2', [os.path.join('nleq2', f)
+                                    for f in ('nleq2.pyf',) + sources])
+    ]
+
+PYNLEQ2_RELEASE_VERSION = os.environ.get('PYNLEQ2_RELEASE_VERSION', '')
+
+# http://conda.pydata.org/docs/build.html#environment-variables-set-during-the-build-process
+CONDA_BUILD = os.environ.get('CONDA_BUILD', '0') == '1'
+if CONDA_BUILD:
     try:
-        f = urlopen(url)
-        print("downloading " + url)
-        with open(outpath, "wb") as fh:
-            fh.write(f.read())
-    except HTTPError, e:
-        print("HTTP Error:", e.code, url)
-    except URLError, e:
-        print("URL Error:", e.reason, url)
+        PYNLEQ2_RELEASE_VERSION = 'v' + open(
+            '__conda_version__.txt', 'rt').readline().rstrip()
+    except IOError:
+        pass
 
+release_py_path = os.path.join(pkg_name, '_release.py')
 
-for src, md5sum in zip(sources, md5sums):
-    srcpath = os.path.join('nleq2', src)
-    if not os.path.exists(srcpath):
-        NLEQ2_URL = os.environ.get('PYNLEQ2_NLEQ2_ROOT_URL', None)
-        if NLEQ2_URL:
-            download(NLEQ2_URL+src, srcpath)
-        else:
-            fmtstr = "Could not find: %s (and $PYNLEQ2_NLEQ2_ROOT_URL not set)"
-            raise ValueError(fmtstr % src)
-    if md5_of_file(srcpath).hexdigest() != md5sum:
-        raise ValueError("Mismatching MD5 sum for %s" % srcpath)
+if (len(PYNLEQ2_RELEASE_VERSION) > 1 and
+   PYNLEQ2_RELEASE_VERSION[0] == 'v'):
+    TAGGED_RELEASE = True
+    __version__ = PYNLEQ2_RELEASE_VERSION[1:]
+else:
+    TAGGED_RELEASE = False
+    # read __version__ attribute from _release.py:
+    exec(open(release_py_path).read())
 
-nleq2 = Extension('pynleq2.nleq2', [os.path.join('nleq2', f) for f in ('nleq2.pyf',) + sources])
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'License :: OSI Approved :: BSD License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Fortran',
+    'Programming Language :: Python'
+],
 
-setup(name="pynleq2",
-      version = __version__,
-      description = "Python binding for NLEQ2",
-      author = "Björn Dahlgren",
-      author_email = "bjodah@DELETEMEgmail.com",
-      url = "http://github.com/bjodah/pynleq2",
-      requires = ['numpy'],
-      classifiers = [
-          'Development Status :: 4 - Beta',
-          'License :: OSI Approved :: BSD License',
-          'Natural Language :: English',
-          'Operating System :: OS Independent',
-          'Programming Language :: Fortran',
-          'Programming Language :: Python'
-      ],
-      packages = ['pynleq2'],
-      ext_modules = [nleq2]
+tests = [
+    'pynleq2.tests',
+]
+
+descr = "Python binding for NLEQ2"
+setup_kwargs = dict(
+    name=pkg_name,
+    version=__version__,
+    description=descr,
+    classifiers=classifiers,
+    author='Björn Dahlgren',
+    author_email='bjodah@DELETEMEgmail.com',
+    url='https://github.com/bjodah/' + pkg_name,
+    license='BSD',
+    requires = ['numpy'],
+    packages=[pkg_name] + tests,
+    ext_modules=ext_modules,
 )
+
+if __name__ == '__main__':
+    try:
+        if TAGGED_RELEASE:
+            # Same commit should generate different sdist
+            # depending on tagged version (set PYNLEQ2_RELEASE_VERSION)
+            # this will ensure source distributions contain the correct version
+            shutil.move(release_py_path, release_py_path+'__temp__')
+            open(release_py_path, 'wt').write(
+                "__version__ = '{}'\n".format(__version__))
+        setup(**setup_kwargs)
+    finally:
+        if TAGGED_RELEASE:
+            shutil.move(release_py_path+'__temp__', release_py_path)
