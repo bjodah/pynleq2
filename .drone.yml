@@ -4,7 +4,7 @@ build:
     - PYNLEQ2_NLEQ2_ROOT_URL=$$PYNLEQ2_NLEQ2_ROOT_URL
   commands:
     - ./scripts/ci.sh pynleq2
-    - ./scripts/generate_docs.sh
+    - PYTHONPATH=$(pwd) ./scripts/generate_docs.sh
     - ./scripts/prepare_deploy.sh
 
 deploy:
