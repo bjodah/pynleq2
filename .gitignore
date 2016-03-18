@@ -3,7 +3,7 @@
 build/
 **.so
 .cache/
-nleq2/nleq2module.c
-nleq2/*.f
 MANIFEST
 dist/
+**.egg-info/
+__pynleq2_nleq2_root_url__.txt

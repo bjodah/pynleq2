@@ -37,13 +37,17 @@ This has been tested vid NLEQ2 v 2.3.0.2
 import os
 import shutil
 import sys
-from numpy.distutils.core import setup, Extension
 
 pkg_name = 'pynleq2'
-
 ext_modules = []
+
+
+def _path_under_setup(*args):
+    return os.path.join(os.path.dirname(__file__), *args)
+
 if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
         '--help-commands', 'egg_info', 'clean', '--version'):
+    from numpy.distutils.core import Extension, setup
     # nleq2 version: 2.3.0.2
     md5output = """\
     28ed88f1ae7bab8dc850348b5e734881  linalg_nleq2.f
@@ -73,10 +77,11 @@ if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
         with open(outpath, "wb") as fh:
             fh.write(f.read())
 
+    NLEQ2_URL = os.environ.get('PYNLEQ2_NLEQ2_ROOT_URL', None)
+
     for src, md5sum in zip(sources, md5sums):
-        srcpath = os.path.join('nleq2', src)
+        srcpath = _path_under_setup('nleq2', src)
         if not os.path.exists(srcpath):
-            NLEQ2_URL = os.environ.get('PYNLEQ2_NLEQ2_ROOT_URL', None)
             if NLEQ2_URL:
                 download(NLEQ2_URL+src, srcpath)
             else:
@@ -86,7 +91,7 @@ if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
             raise ValueError("Mismatching MD5 sum for %s" % srcpath)
 
     ext_modules = [
-        Extension('pynleq2.nleq2', [os.path.join('nleq2', f)
+        Extension('pynleq2.nleq2', [_path_under_setup('nleq2', f)
                                     for f in ('nleq2.pyf',) + sources])
     ]
 
@@ -101,7 +106,7 @@ if CONDA_BUILD:
     except IOError:
         pass
 
-release_py_path = os.path.join(pkg_name, '_release.py')
+release_py_path = _path_under_setup(pkg_name, '_release.py')
 
 if (len(PYNLEQ2_RELEASE_VERSION) > 1 and
    PYNLEQ2_RELEASE_VERSION[0] == 'v'):
@@ -139,6 +144,7 @@ setup_kwargs = dict(
     requires=['numpy'],
     packages=[pkg_name] + tests,
     ext_modules=ext_modules,
+    zip_safe=False,  # https://github.com/pytest-dev/pytest/issues/1445
 )
 
 if __name__ == '__main__':
@@ -150,7 +156,11 @@ if __name__ == '__main__':
             shutil.move(release_py_path, release_py_path+'__temp__')
             open(release_py_path, 'wt').write(
                 "__version__ = '{}'\n".format(__version__))
-        setup(**setup_kwargs)
+        try:
+            setup(**setup_kwargs)
+        except NameError:
+            from numpy.distutils.core import setup
+            setup(**setup_kwargs)
     finally:
         if TAGGED_RELEASE:
             shutil.move(release_py_path+'__temp__', release_py_path)
