@@ -37,6 +37,7 @@ This has been tested vid NLEQ2 v 2.3.0.2
 import os
 import shutil
 import sys
+import warnings
 
 pkg_name = 'pynleq2'
 ext_modules = []
@@ -50,8 +51,8 @@ if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
     from numpy.distutils.core import Extension, setup
     # nleq2 version: 2.3.0.2
     md5output = """\
-    28ed88f1ae7bab8dc850348b5e734881  linalg_nleq2.f
-    73401c84c8e0d434fffa6f303ba813e0  nleq2.f
+    1cd2f30a38e255d394685075e921de4a  linalg_nleq2.f
+    8a94b6c440d068f075abecbde495a8e1  nleq2.f
     77189300200be5748152fa28dc236963  wnorm.f
     5d912441fb6f55d10c8b98bbb9168195  zibconst.f
     e2ac1a20fc6294cb3e0d7f65bbac53e6  zibmon.f
@@ -88,7 +89,7 @@ if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
                 fmtstr = "Could not find: %s ($PYNLEQ2_NLEQ2_ROOT_URL not set)"
                 raise ValueError(fmtstr % src)
         if md5_of_file(srcpath).hexdigest() != md5sum:
-            raise ValueError("Mismatching MD5 sum for %s" % srcpath)
+            warnings.warn("Unexpected MD5 sum for %s" % srcpath)
 
     ext_modules = [
         Extension('pynleq2.nleq2', [_path_under_setup('nleq2', f)
