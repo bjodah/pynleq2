@@ -49,7 +49,7 @@ Source distribution of the binding is available here:
 
 Example
 -------
-Example reformulated from `SciPy documentation <docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.root.html>`_:
+Example reformulated from `SciPy documentation <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.root.html>`_:
 
 .. code:: python
 
