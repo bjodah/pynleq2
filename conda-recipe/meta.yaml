@@ -7,14 +7,17 @@ source:
 
 build:
   number: 0
+  script: python -m pip install --no-deps --ignore-installed .
 
 requirements:
   build:
     - python
-    - numpy
+    - setuptools
+    - pip
+    - numpy 1.11.*
   run:
     - python
-    - numpy
+    - numpy >=1.11
 
 test:
   imports:
@@ -23,6 +26,8 @@ test:
     - python
     - pytest
     - numpy
+  commands:
+    - pytest --pyargs {{ name }}
 
 about:
   home: https://github.com/bjodah/pynleq2
