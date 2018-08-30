@@ -1,6 +1,6 @@
 package:
   name: pynleq2
-  version: 0.0.1.git
+  version: 0.1.0.dev0+git
 
 source:
   path: ../
