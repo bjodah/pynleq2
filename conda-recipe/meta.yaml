@@ -1,6 +1,9 @@
+{% set name = "pynleq2" %}
+{% set version = "0.1.0.dev0+git" %}
+
 package:
-  name: pynleq2
-  version: 0.1.0.dev0+git
+  name: {{ name|lower }}
+  version: {{ version }}
 
 source:
   path: ../
